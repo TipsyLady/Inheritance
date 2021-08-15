@@ -41,7 +41,7 @@ public:
 		cout << "H_Constructor: \t" << this << endl;
 
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "H_Destructor: \t" << this << endl;
 	}
@@ -228,9 +228,14 @@ void main()
 		new Teacher("Dog", "Saymon", 32, "Dog_life", 5),
 		new Student("Sorokina", "Masha", 26,"РПО", "ВБУ_011", 100)
 	};
-	for (int i = 0; sizeof(group) / sizeof(Human*); i++)
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
 		group[i]->print();
 		cout << delimiter << endl;
+	}
+
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
 	}
 }
