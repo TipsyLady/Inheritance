@@ -5,7 +5,7 @@ using namespace std;
 
 namespace Geometry
 {
-	enum Colour
+enum Colour
 	{
 		CONSOLE_DEFAULT = 0x07,
 		CONSOLE_RED = 0xCC,
@@ -18,7 +18,7 @@ namespace Geometry
 
 	};
 
-	class Shape
+class Shape
 	{
 	protected:
 		Colour colour; //любую геометрическую фигуру можно нарисовать, опеределенным цветом
@@ -39,7 +39,7 @@ namespace Geometry
 		virtual void draw() const = 0;
 	};
 
-	class Square : public Shape
+class Square : public Shape
 	{
 		double side;
 	public:
@@ -180,6 +180,7 @@ public:
 		cout << "Периметр прямоугольника: " << get_perimeter() << endl;
 	}
 };
+
 class Circle : public Shape
 {
 	double radius;
@@ -236,7 +237,85 @@ public:
 		cout << "Периметр круга: " << get_perimeter() << endl;
 	}
 };
-	class Triangle : public Shape
+
+class Triangle : public Shape
+{
+public:
+	Triangle(Colour colour) :Shape(colour) {}
+	~Triangle() {}
+	virtual double get_height() const = 0;
+};
+
+class EqualTriangle :public Triangle
+{
+	double side;
+public:
+	double get_side() const
+	{
+		return side;
+	}
+	double set_side(double side)
+	{
+		if (side <= 0)side = 1;
+		this->side = side;
+		return this->side;
+	}
+	EqualTriangle(double side, Colour colour) : Triangle(colour) 
+	{
+		set_side(side);
+	}
+	~EqualTriangle() {}
+	double get_height() const
+	{
+		return sqrt(3) / 2 * side;
+	}
+	double get_area() const
+	{
+		return (get_height() / 2) * side;
+	}
+	double get_perimeter() const
+	{
+		return side * 3;
+	}
+	void draw()const
+	{
+		HWND hwnd = GetDesktopWindow();
+		hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");
+		HDC hdc = GetDC(hwnd);
+
+		HPEN h_pen = CreatePen(PS_SOLID, 5, colour);
+		HBRUSH h_brush = CreateSolidBrush(colour);
+
+		SelectObject(hdc, h_pen);
+		SelectObject(hdc, h_brush);
+
+		unsigned int start_x = 400;
+		unsigned int start_y = 400;
+
+		POINT points[]
+		{
+			{start_x, start_y + side},
+			{start_x + side, start_y + side},
+			{start_x + side / 2, start_y}
+		};
+
+		Polygon(hdc, points, sizeof(points) / sizeof(POINT));
+		DeleteObject(h_brush);
+		DeleteObject(h_pen);
+
+		ReleaseDC(hwnd, hdc);
+
+	}
+	void print()const
+	{
+		cout << "Длина треугольника: " << get_side() << endl;
+		cout << "Площадь треугольника: " << get_area() << endl;
+		cout << "Периметр треугольника: " << get_perimeter() << endl;
+	}
+};
+
+
+	/*class Triangle : public Shape
 	{
 	protected:
 		double side_A;
@@ -308,7 +387,7 @@ public:
 			cout << "Площадь треугольника: " << get_area() << endl;
 			cout << "Периметр треугольника: " << get_perimeter() << endl;
 		}
-	};
+	};*/
 
 }
 
@@ -331,8 +410,10 @@ void main()
 	Geometry::Circle circle(300, Geometry::Colour::GREEN);
 	circle.print();
 	circle.draw();
-	Geometry::EqualTriangle equal(2, 2, 2, Geometry::Colour::RED);
-	equal.print();
+
+	Geometry::EqualTriangle trian(100, Geometry::Colour::RED);
+	trian.print();
+	trian.draw();
 
 	//Geometry::Rectangle rect;
 };
