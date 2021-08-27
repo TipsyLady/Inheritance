@@ -308,12 +308,90 @@ public:
 	}
 	void print()const
 	{
-		cout << "Длина треугольника: " << get_side() << endl;
-		cout << "Площадь треугольника: " << get_area() << endl;
-		cout << "Периметр треугольника: " << get_perimeter() << endl;
+		cout << "Длина равностороннего треугольника: " << get_side() << endl;
+		cout << "Площадь равностороннего треугольника: " << get_area() << endl;
+		cout << "Периметр равностороннего треугольника: " << get_perimeter() << endl;
 	}
 };
+class IsoscelesTriangle : public Triangle
+{
+	double side;
+	double base;
+public:
+	double get_side() const
+	{
+		return side;
+	}
+	double get_base() const
+	{
+		return base;
+	}
+	double set_side(double side)
+	{
+		if (side <= 0)side = 1;
+		this->side = side;
+		return this->side;
+	}
+	double set_base(double base)
+	{
+		if (base <= 0)base = 1;
+		this->base = base;
+		return this->base;
+	}
+	IsoscelesTriangle(double side, double base, Colour colour) : Triangle(colour)
+	{
+		set_side(side);
+		set_base(base);
+	}
+	~IsoscelesTriangle(){}
+	double get_height() const
+	{
+		return 0,5 * sqrt (4 * ((side * side) - (base * base))) ;
+	}
+	double get_area() const
+	{
+		return (get_height() * base) * 0,5;
+	}
+	double get_perimeter() const
+	{
+		return 2 * side + base;
+	}
+	void draw()const
+	{
+		HWND hwnd = GetDesktopWindow();
+		hwnd = FindWindow(NULL, L"Inheritance - Microsoft Visual Studio");
+		HDC hdc = GetDC(hwnd);
 
+		HPEN h_pen = CreatePen(PS_SOLID, 5, colour);
+		HBRUSH h_brush = CreateSolidBrush(colour);
+
+		SelectObject(hdc, h_pen);
+		SelectObject(hdc, h_brush);
+
+		unsigned int start_x = 600;
+		unsigned int start_y = 400;
+
+		POINT points[]
+		{
+			{start_x+ base, start_y},
+			{start_x + base, start_y + side},
+			{start_x , start_y + side / 2}
+		};
+
+		Polygon(hdc, points, sizeof(points) / sizeof(POINT));
+		DeleteObject(h_brush);
+		DeleteObject(h_pen);
+
+		ReleaseDC(hwnd, hdc);
+
+	}
+	void print()const
+	{
+		cout << "Длина равнобедренного треугольника: " << get_side() << endl;
+		cout << "Площадь равнобедренного треугольника: " << get_area() << endl;
+		cout << "Периметр  равнобедренного треугольника: " << get_perimeter() << endl;
+	}
+};
 
 	/*class Triangle : public Shape
 	{
@@ -407,13 +485,17 @@ void main()
 	rectangle.print();
 	rectangle.draw();*/
 
-	Geometry::Circle circle(300, Geometry::Colour::GREEN);
+/*	Geometry::Circle circle(300, Geometry::Colour::GREEN);
 	circle.print();
 	circle.draw();
 
 	Geometry::EqualTriangle trian(100, Geometry::Colour::RED);
 	trian.print();
-	trian.draw();
+	trian.draw()*/;
+
+	Geometry::IsoscelesTriangle isotrian(400, 500, Geometry::Colour::BLUE);
+	isotrian.print();
+	isotrian.draw();
 
 	//Geometry::Rectangle rect;
 };
